@@ -43,7 +43,7 @@ jobs:
       - name: Build portfolio
         run: npm run build
         env:
-          VITE_BASE_PATH: /AI_Portfolio/
+          VITE_BASE_PATH: ${{ endsWith(github.event.repository.name, '.github.io') && '/' || format('/{0}/', github.event.repository.name) }}
           VITE_FORMSPREE_ENDPOINT: ${{ vars.VITE_FORMSPREE_ENDPOINT }}
       - name: Verify public assets
         run: npm run verify:public

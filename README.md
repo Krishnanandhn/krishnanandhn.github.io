@@ -76,23 +76,23 @@ The form includes required fields, email validation, length limits, a honeypot, 
 
 ## Deploy for free on GitHub Pages
 
-The included `.github/workflows/deploy.yml` deploys this portfolio to <https://krishnanandhn.github.io/AI_Portfolio/> when changes are pushed to `main`. It uses Node.js 24, installs locked dependencies, runs lint, builds the app with `VITE_BASE_PATH=/AI_Portfolio/`, verifies public assets, and publishes only `site/dist/`. The deployment actions are pinned to specific commits.
+The target homepage is <https://krishnanandhn.github.io/>. GitHub requires an account-level repository named **krishnanandhn.github.io** to serve that address. The included `.github/workflows/deploy.yml` automatically builds for `/` in a `*.github.io` repository and for the repository subpath otherwise. It uses Node.js 24, installs locked dependencies, runs lint, builds the app, verifies public assets, and publishes only `site/dist/` on pushes to `main`. The deployment actions are pinned to specific commits.
 
-1. Publish the entire workspace to the **public AI_Portfolio repository** under the **Krishnanandhn** account. Keep `site/` inside the repository root, and include `.github/workflows/deploy.yml`, `site/package-lock.json`, and `site/public/media/`.
+1. In the existing **Krishnanandhn/AI_Portfolio** repository, open **Settings > General > Repository name** and rename it to **krishnanandhn.github.io**. Alternatively, publish the workspace to a new public repository with that name if it is available. If a repository with that name already exists, inspect it before replacing any content. Keep `site/` inside the repository root, and include `.github/workflows/deploy.yml`, `site/package-lock.json`, and `site/public/media/`.
 2. Do not publish `Assets/`, local environment files, or `node_modules/`. The existing ignore rules exclude these untracked files. The prepared public resume intentionally includes the mobile number.
-3. In the repository's **Settings > Pages > Build and deployment**, set **Source** to **GitHub Actions**. Do not select deployment from a branch or the `docs` folder.
+3. If you renamed the repository, update the local Git remote to `https://github.com/Krishnanandhn/krishnanandhn.github.io.git`. In the repository's **Settings > Pages > Build and deployment**, set **Source** to **GitHub Actions**. Do not select deployment from a branch or the `docs` folder.
 4. Push to `main`, then open the **Actions** tab and watch **Deploy portfolio to GitHub Pages**. If the first run happened before Pages was enabled, rerun it or use **Run workflow**.
-5. After the deployment succeeds, open <https://krishnanandhn.github.io/AI_Portfolio/> and test the portrait, gameplay videos, resume, and contact action. Future pushes to `main` automatically redeploy. GitHub may take a few minutes to publish changes.
+5. After the deployment succeeds, open <https://krishnanandhn.github.io/> and test the portrait, gameplay videos, resume, and contact action. Future pushes to `main` automatically redeploy. GitHub may take a few minutes to publish changes.
 
-If the live site shows this README instead of the portfolio, Pages is publishing the source branch rather than the built app. In [repository Pages settings](https://github.com/Krishnanandhn/AI_Portfolio/settings/pages), change **Source** from **Deploy from a branch** to **GitHub Actions**, then rerun the deployment workflow. Do not copy the source HTML into the repository root or remove the README.
+If the live site shows this README instead of the portfolio, Pages is publishing the source branch rather than the built app. In the repository's **Settings > Pages**, change **Source** from **Deploy from a branch** to **GitHub Actions**, then rerun the deployment workflow. Do not copy the source HTML into the repository root or remove the README.
 
-Vite reads `VITE_BASE_PATH`, and all public media URLs derive from Vite's base. The workflow sets `/AI_Portfolio/`; local development and Vercel/Netlify builds still default to `/`. If the repository name changes, update the workflow's base path. If the default branch is not `main`, update its branch trigger to match.
+Vite reads `VITE_BASE_PATH`, and all public media URLs derive from Vite's base. The workflow derives the path from the repository name, so renaming it to `krishnanandhn.github.io` automatically switches to `/`. Keeping the name `AI_Portfolio` would continue publishing at <https://krishnanandhn.github.io/AI_Portfolio/>, not the requested homepage. Local development and Vercel/Netlify builds default to `/`. If the default branch is not `main`, update the workflow's branch trigger to match.
 
-To verify the GitHub Pages layout locally, run from `site/`:
+To verify the requested homepage layout locally, run from `site/`:
 
 ```sh
-VITE_BASE_PATH=/AI_Portfolio/ npm run build
-VITE_BASE_PATH=/AI_Portfolio/ npm test -- --grep 'responsive content|both gameplay|copy contact|portrait photo'
+npm run build
+npm test -- --grep 'responsive content|both gameplay|copy contact|portrait photo'
 ```
 
 For optional direct form delivery, add a repository **Actions variable** named `VITE_FORMSPREE_ENDPOINT` under **Settings > Secrets and variables > Actions > Variables**, then rerun the deployment. Leave it unset to keep the email-draft fallback. No personal access token or other deployment secret is required; the workflow uses GitHub's built-in token and Pages permissions.
