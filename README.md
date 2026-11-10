@@ -74,6 +74,22 @@ Without configuration, the form validates input and opens the visitor's email ap
 
 The form includes required fields, email validation, length limits, a honeypot, a request timeout, and pending/success/error feedback. The endpoint is a public form identifier, not a secret. Do not put credentials in any `VITE_` variable. Submission content goes to Formspree only after that integration is configured; fonts and media are self-hosted and no analytics are added.
 
+## Deploy for free on GitHub Pages
+
+The included `.github/workflows/deploy.yml` deploys this portfolio to <https://krishnanandhn.github.io/> when changes are pushed to `main`. It uses Node.js 24, installs locked dependencies, runs lint, builds the app, verifies public assets, and publishes only `site/dist/`. The deployment actions are pinned to specific commits.
+
+1. Publish the entire workspace to a **public** repository named **krishnanandhn.github.io** under the **Krishnanandhn** account. Keep `site/` inside the repository root, and include `.github/workflows/deploy.yml`, `site/package-lock.json`, and `site/public/media/`.
+2. Do not publish `Assets/`, local environment files, or `node_modules/`. The existing ignore rules exclude these untracked files. The prepared public resume intentionally includes the mobile number.
+3. In the repository's **Settings > Pages > Build and deployment**, set **Source** to **GitHub Actions**. Do not select deployment from a branch or the `docs` folder.
+4. Push to `main`, then open the **Actions** tab and watch **Deploy portfolio to GitHub Pages**. If the first run happened before Pages was enabled, rerun it or use **Run workflow**.
+5. After the deployment succeeds, open <https://krishnanandhn.github.io/> and test the portrait, gameplay videos, resume, and contact action. Future pushes to `main` automatically redeploy. GitHub may take a few minutes to publish changes.
+
+The current Vite base defaults to `/`, which is correct for this account-level site. A differently named repository, such as `AI_Portfolio`, would use a project subpath and requires updating both Vite's base and the root-relative media URLs before deployment. If the default branch is not `main`, update the workflow's branch trigger to match.
+
+For optional direct form delivery, add a repository **Actions variable** named `VITE_FORMSPREE_ENDPOINT` under **Settings > Secrets and variables > Actions > Variables**, then rerun the deployment. Leave it unset to keep the email-draft fallback. No personal access token or other deployment secret is required; the workflow uses GitHub's built-in token and Pages permissions.
+
+GitHub Pages and standard GitHub-hosted Actions runners are free for public repositories within GitHub's usage limits. The provided `github.io` address includes HTTPS; a purchased custom domain is optional. This is static hosting, so no backend is deployed. Vercel and Netlify response-header settings do not apply to GitHub Pages.
+
 ## Deploy for free on Vercel
 
 1. Push the project to a GitHub repository, including `site/public/media/` and `site/package-lock.json`, but not `Assets/` or the source Markdown resume. The public resume PDF intentionally includes the mobile number.
