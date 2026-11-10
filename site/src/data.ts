@@ -1,9 +1,12 @@
+const mediaBase = `${import.meta.env.BASE_URL}media/`
+
 export const profile = {
   name: 'Krishnanandh N',
   email: 'krishnanandhn33@gmail.com',
   github: 'https://github.com/Krishnanandhn',
   linkedin: 'https://www.linkedin.com/in/krishnanandh-n-37a36124a/',
-  resume: '/media/Krishnanandh-N-Resume.pdf',
+  resume: `${mediaBase}Krishnanandh-N-Resume.pdf`,
+  portrait: `${mediaBase}portrait.png`,
   location: 'Thiruvananthapuram, India',
 }
 
@@ -43,7 +46,7 @@ export const projects: Project[] = [
     role: 'Lead Developer & Systems Designer / AI-assisted', categories: ['Game development'],
     stack: ['Unity 3D', 'C#', 'NavMesh AI', 'State machines'],
     highlights: ['Player movement, enemy pathfinding, and dynamic wave spawning.', 'Combat state management and modular gameplay systems.'],
-    github: 'https://github.com/Krishnanandhn/Zombie-World', video: '/media/zombie-world.mp4', poster: '/media/zombie-world.webp',
+    github: 'https://github.com/Krishnanandhn/Zombie-World', video: `${mediaBase}zombie-world.mp4`, poster: `${mediaBase}zombie-world.webp`,
   },
   {
     id: 'flappy-bird', title: 'Flappy Bird', eyebrow: 'Personal / 2D arcade',
@@ -51,7 +54,7 @@ export const projects: Project[] = [
     role: 'Developer / AI-assisted', categories: ['Game development'],
     stack: ['Unity 2D', 'C#', '2D Physics', 'Mobile input'],
     highlights: ['Rigid-body collisions, score tracking, and responsive jump mechanics.', 'Infinite background scrolling and a repeatable gameplay loop.'],
-    github: 'https://github.com/Krishnanandhn/Flappybird', video: '/media/flappy-bird.mp4', poster: '/media/flappy-bird.webp',
+    github: 'https://github.com/Krishnanandhn/Flappybird', video: `${mediaBase}flappy-bird.mp4`, poster: `${mediaBase}flappy-bird.webp`,
   },
 ]
 

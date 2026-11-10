@@ -1,6 +1,7 @@
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState, type PointerEvent, type RefObject } from 'react'
 import { DoubleSide, MathUtils, PlaneGeometry, SRGBColorSpace, TextureLoader, type Group } from 'three'
+import { profile } from './data'
 
 interface SceneProps { playing: boolean; reducedMotion: boolean }
 interface PortraitProps extends SceneProps { interaction: RefObject<{ x: number; y: number }> }
@@ -9,7 +10,7 @@ function Portrait({ playing, reducedMotion, interaction }: PortraitProps) {
   const stage = useRef<Group>(null)
   const portrait = useRef<Group>(null)
   const elapsed = useRef(0)
-  const loadedTexture = useLoader(TextureLoader, '/media/portrait.png')
+  const loadedTexture = useLoader(TextureLoader, profile.portrait)
   const [texture] = useState(() => {
     const prepared = loadedTexture.clone()
     prepared.colorSpace = SRGBColorSpace
@@ -81,7 +82,7 @@ export default function SpatialScene(props: SceneProps) {
 
   return (
     <div className="portrait-stage" onPointerDown={movePortrait} onPointerMove={movePortrait} onPointerLeave={resetPointer} onPointerCancel={resetPointer} onPointerUp={event => { if (event.pointerType !== 'mouse') resetPointer() }}>
-      <Canvas role="img" frameloop={props.reducedMotion ? 'demand' : 'always'} camera={{ position: [0, 0, 7], fov: 40 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'low-power' }} fallback={<div className="scene-fallback"><img src="/media/portrait.png" width="617" height="669" alt="Krishnanandh N" /></div>} aria-label="Interactive photo portrait of Krishnanandh N with 3D depth">
+      <Canvas role="img" frameloop={props.reducedMotion ? 'demand' : 'always'} camera={{ position: [0, 0, 7], fov: 40 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'low-power' }} fallback={<div className="scene-fallback"><img src={profile.portrait} width="617" height="669" alt="Krishnanandh N" /></div>} aria-label="Interactive photo portrait of Krishnanandh N with 3D depth">
         <Portrait {...props} interaction={interaction} />
       </Canvas>
     </div>

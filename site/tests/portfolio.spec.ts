@@ -25,7 +25,7 @@ async function canvasSignature(page: Page) {
 test('responsive content, real assets, and nonblank spatial canvas', async ({ page }, testInfo) => {
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
-  await page.goto('/')
+  await page.goto('./')
   await expect(page.getByRole('heading', { name: 'Krishnanandh N', exact: true })).toBeVisible()
   await expect(page.locator('.project-card')).toHaveCount(3)
   await expect(page.locator('canvas')).toBeVisible()
@@ -34,7 +34,7 @@ test('responsive content, real assets, and nonblank spatial canvas', async ({ pa
   await expect.poll(async () => (await canvasSignature(page)).portraitPixels).toBeGreaterThan(100)
   const portraitAsset = await page.evaluate(async () => {
     const image = new Image()
-    image.src = '/media/portrait.png'
+    image.src = new URL('media/portrait.png', document.baseURI).href
     await image.decode()
     const sample = document.createElement('canvas')
     sample.width = image.naturalWidth
@@ -66,7 +66,7 @@ test('responsive content, real assets, and nonblank spatial canvas', async ({ pa
 })
 
 test('project and skill filters are independent and accurate', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('./')
   const work = page.getByRole('group', { name: 'Filter projects' })
   await work.getByRole('button', { name: 'AR / XR', exact: true }).click()
   await expect(page.locator('.project-card')).toHaveCount(1)
@@ -87,7 +87,7 @@ test('project and skill filters are independent and accurate', async ({ page }) 
 })
 
 test('light theme persists and both themes meet core accessibility checks', async ({ page }, testInfo) => {
-  await page.goto('/')
+  await page.goto('./')
   for (const theme of ['dark', 'light']) {
     if (theme === 'light') await page.getByRole('button', { name: 'Switch to light theme' }).click()
     await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
@@ -107,7 +107,7 @@ test('light theme persists and both themes meet core accessibility checks', asyn
 })
 
 test('timeline exposes and hides the matching experience details', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('./')
   const job = page.getByRole('button', { name: /Sep 2021 - Present Software Engineer/ })
   await expect(job).toHaveAttribute('aria-expanded', 'true')
   await job.click()
@@ -119,7 +119,7 @@ test('timeline exposes and hides the matching experience details', async ({ page
 })
 
 test('both gameplay recordings load and modal closes with Escape', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('./')
   for (const title of ['Zombie World', 'Flappy Bird']) {
     await page.getByRole('button', { name: `Watch ${title} gameplay`, exact: true }).click()
     await expect(page.getByRole('dialog')).toBeVisible()
@@ -135,7 +135,7 @@ test('both gameplay recordings load and modal closes with Escape', async ({ page
 
 test('copy contact and original resume download work while phone stays off the webpage', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write'])
-  await page.goto('/')
+  await page.goto('./')
   await page.getByRole('button', { name: 'Copy email address', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Email copied', exact: true })).toBeVisible()
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('krishnanandhn33@gmail.com')
@@ -151,7 +151,7 @@ test('copy contact and original resume download work while phone stays off the w
 
 test('3D animation moves, responds to pointer, and exposes pause and reset controls', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
-  await page.goto('/')
+  await page.goto('./')
   await expect(page.locator('canvas')).toBeVisible()
   await expect.poll(async () => (await canvasSignature(page)).painted).toBeGreaterThan(1000)
   const first = (await canvasSignature(page)).signature
@@ -182,7 +182,7 @@ test('portrait photo remains visible when WebGL is unavailable', async ({ page }
       },
     })
   })
-  await page.goto('/')
+  await page.goto('./')
   const portrait = page.locator('.scene-fallback img')
   await expect(portrait).toBeVisible()
   await expect.poll(() => portrait.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth === 617)).toBe(true)
@@ -190,7 +190,7 @@ test('portrait photo remains visible when WebGL is unavailable', async ({ page }
 })
 
 test('contact validates input and uses an honest email-draft fallback', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('./')
   await page.getByRole('button', { name: 'Open email draft' }).click()
   expect(await page.locator('input[name="name"]').evaluate(input => (input as HTMLInputElement).validity.valueMissing)).toBe(true)
   await page.getByRole('textbox', { name: 'Your name' }).fill('Test Recruiter')
@@ -202,7 +202,7 @@ test('contact validates input and uses an honest email-draft fallback', async ({
 
 test('mobile navigation opens, navigates, and closes with Escape', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'Mobile navigation only')
-  await page.goto('/')
+  await page.goto('./')
   await page.getByRole('button', { name: 'Open navigation' }).click()
   await expect(page.getByRole('navigation')).toBeVisible()
   await page.getByRole('navigation').getByRole('link', { name: 'Work', exact: true }).click()
@@ -217,7 +217,7 @@ test('compact and wide screens have no horizontal or heading overflow', async ({
   test.skip(testInfo.project.name !== 'desktop', 'Additional desktop viewport sweep')
   for (const width of [320, 560, 640, 1024, 1920]) {
     await page.setViewportSize({ width, height: 1000 })
-    await page.goto('/')
+    await page.goto('./')
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false)
     expect(await page.locator('h1, h2, h3').evaluateAll(elements => elements.some(element => element.scrollWidth > element.clientWidth + 2))).toBe(false)
   }
@@ -226,7 +226,7 @@ test('compact and wide screens have no horizontal or heading overflow', async ({
 test.describe('configured Formspree transport', () => {
   test('shows success only after successful delivery', async ({ page }) => {
     await page.route('https://formspree.io/f/testportfolio', route => route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }))
-    await page.goto('http://127.0.0.1:5175')
+    await page.goto(`http://127.0.0.1:5175${process.env.VITE_BASE_PATH || '/'}`)
     await page.getByRole('textbox', { name: 'Your name' }).fill('Test Recruiter')
     await page.getByRole('textbox', { name: 'Email address', exact: true }).fill('test@example.com')
     await page.getByRole('textbox', { name: 'What do you have in mind?' }).fill('A test opportunity, not a real submission.')
@@ -236,7 +236,7 @@ test.describe('configured Formspree transport', () => {
   })
   test('retains the message and offers email on delivery error', async ({ page }) => {
     await page.route('https://formspree.io/f/testportfolio', route => route.fulfill({ status: 500, contentType: 'application/json', body: '{"error":"test"}' }))
-    await page.goto('http://127.0.0.1:5175')
+    await page.goto(`http://127.0.0.1:5175${process.env.VITE_BASE_PATH || '/'}`)
     await page.getByRole('textbox', { name: 'Your name' }).fill('Test Recruiter')
     await page.getByRole('textbox', { name: 'Email address', exact: true }).fill('test@example.com')
     await page.getByRole('textbox', { name: 'What do you have in mind?' }).fill('A test opportunity, not a real submission.')

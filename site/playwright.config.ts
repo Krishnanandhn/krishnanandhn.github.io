@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const basePath = process.env.VITE_BASE_PATH || '/'
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -7,7 +9,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: `http://127.0.0.1:4173${basePath}`,
     reducedMotion: 'reduce',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
@@ -19,7 +21,7 @@ export default defineConfig({
     { name: 'mobile', use: { ...devices['iPhone 13'], deviceScaleFactor: 1, defaultBrowserType: 'chromium' } },
   ],
   webServer: [
-    { command: 'npm run preview -- --host 127.0.0.1 --port 4173 --strictPort', url: 'http://127.0.0.1:4173', reuseExistingServer: !process.env.CI },
-    { command: 'npm run dev -- --host 127.0.0.1 --port 5175 --strictPort', url: 'http://127.0.0.1:5175', reuseExistingServer: false, env: { VITE_FORMSPREE_ENDPOINT: 'https://formspree.io/f/testportfolio' } },
+    { command: 'npm run preview -- --host 127.0.0.1 --port 4173 --strictPort', url: `http://127.0.0.1:4173${basePath}`, reuseExistingServer: !process.env.CI },
+    { command: 'npm run dev -- --host 127.0.0.1 --port 5175 --strictPort', url: `http://127.0.0.1:5175${basePath}`, reuseExistingServer: false, env: { VITE_FORMSPREE_ENDPOINT: 'https://formspree.io/f/testportfolio' } },
   ],
 })

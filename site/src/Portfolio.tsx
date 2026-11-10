@@ -13,7 +13,7 @@ const SpatialScene = lazy(() => import('./SpatialScene'))
 const navigation = [['Work', '#work'], ['About', '#about'], ['Toolkit', '#toolkit'], ['Journey', '#journey']] as const
 
 function PortraitFallback() {
-  return <div className="scene-fallback"><img src="/media/portrait.png" width="617" height="669" alt="Krishnanandh N" fetchPriority="high" /></div>
+  return <div className="scene-fallback"><img src={profile.portrait} width="617" height="669" alt="Krishnanandh N" fetchPriority="high" /></div>
 }
 
 class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
